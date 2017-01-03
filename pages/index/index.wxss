@@ -9,12 +9,12 @@
     overflow-x: hidden;
 }
 
-/**所选货币列表**/
+/**所选货币列表 **/
 .layout-top{
     width: 100%;
-    margin-bottom: 30rpx;
+    margin-bottom: 2rpx;
 }
-.currency-group {
+.currency-group,.currency-group-selected {
     width: 100%;
     display: flex;
     flex-wrap:wrap;
@@ -23,6 +23,10 @@
     flex: 1;
     height: 4rem;
     border-bottom: 1px solid #d9eef7;
+}
+.currency-group-selected {
+    height: 5rem;
+    background-color: #d9eef7;
 }
 .currency-cal{
     /**左右各3%，作为padding**/

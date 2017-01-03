@@ -2,40 +2,47 @@
 //获取应用实例
 var app = getApp()
 	Page({
-		data : {
-			idb : "back",
-			idc : "clear",
-			idt : "toggle",
-			idadd : "＋",
-			id9 : "9",
-			id8 : "8",
-			id7 : "7",
-			idj : "－",
-			id6 : "6",
-			id5 : "5",
-			id4 : "4",
-			idx : "×",
-			id3 : "3",
-			id2 : "2",
-			id1 : "1",
-			iddiv : "÷",
-			id0 : "0",
-			idd : ".",
-			ide : "＝",
-			screenData : "0",
-			operaSymbo : {
-				"＋" : "+",
-				"－" : "-",
-				"×" : "*",
-				"÷" : "/",
-				"." : "."
-			},
-			lastIsOperaSymbo : false,
-			iconType : 'waiting_circle',
-			iconColor : 'white',
-			arr : [],
-			logs : []
-		},
+	    data: {
+	        idb: "back",
+	        idc: "clear",
+	        idt: "toggle",
+	        idadd: "＋",
+	        id9: "9",
+	        id8: "8",
+	        id7: "7",
+	        idj: "－",
+	        id6: "6",
+	        id5: "5",
+	        id4: "4",
+	        idx: "×",
+	        id3: "3",
+	        id2: "2",
+	        id1: "1",
+	        iddiv: "÷",
+	        id0: "0",
+	        idd: ".",
+	        ide: "＝",
+	        screenData: "0",
+	        operaSymbo: {
+	            "＋": "+",
+	            "－": "-",
+	            "×": "*",
+	            "÷": "/",
+	            ".": "."
+	        },
+	        lastIsOperaSymbo: false,
+	        iconType: 'waiting_circle',
+	        iconColor: 'white',
+	        currencyList: [
+                { id: 1, currencyNameEN: "CNY", currencyCal: "12+23*11", currencyValue: 123.33, currencyNameCN: "人民币￥" },
+                { id: 2, currencyNameEN: "HKD", currencyCal: "12+23*11", currencyValue: 223.33, currencyNameCN: "港币$" },
+                { id: 3, currencyNameEN: "USD", currencyCal: "12+23*11", currencyValue: 323.33, currencyNameCN: "美元$" },
+                { id: 4, currencyNameEN: "NTD", currencyCal: "12+23*11", currencyValue: 423.33, currencyNameCN: "新台币$" },
+	        ],
+	        selectedCurrencyId: 3,
+	        arr: [],
+	        logs: []
+	    },
 		onLoad : function (options) {
 			// 页面初始化 options为页面跳转所带来的参数
 		},
@@ -51,7 +58,24 @@ var app = getApp()
 		onUnload : function () {
 			// 页面关闭
 		},
-		clickBtn : function (event) {
+		currencyClick: function (event) {
+		    
+		    //由于点击发生在currency-group内部的view上，
+		    //所以這里用event.currentTarget，而不是event.target
+		    var id = parseInt(event.currentTarget.dataset.cid, 10);
+		    if (id === this.data.selectedCurrencyId) {
+		        return;
+		    }
+
+            //切换当前选中的货币，同时做一些清理工作
+		    this.setData({ "selectedCurrencyId": id });
+
+		},
+		updateCurrencyList: function (event) {
+		    console.log('updated!');
+		},
+		clickBtn: function (event) {
+		    this.updateCurrencyList();
 			var id = event.target.id;
 			if (id == this.data.idb) { //退格←
 				var data = this.data.screenData;
@@ -93,7 +117,7 @@ var app = getApp()
 					return;
 				}
 				//eval是js中window的一个方法，而微信页面的脚本逻辑在是在JsCore中运行，
-        //JsCore是一个没有窗口对象的环境，所以不能再脚本中使用window，也无法在脚本中操作组件
+                //JsCore是一个没有窗口对象的环境，所以不能再脚本中使用window，也无法在脚本中操作组件
 				//var result = eval(newData);
 
 				var lastWord = data.charAt(data.length);

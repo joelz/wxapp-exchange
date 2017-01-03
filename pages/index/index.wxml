@@ -5,63 +5,20 @@
   <view class="layout-top">
 
     <!--第01组-->
-    <view class="currency-group">
+    <view wx:for="{{currencyList}}" wx:key="id" wx:for-index="idx" wx:for-item="item"
+      class="{{selectedCurrencyId == item.id ? 'currency-group-selected':'currency-group'}}"
+      data-cid="{{item.id}}" bindtap="currencyClick">
       <view class="currency-cal">
-        123*434+122
+        {{item.currencyCal}}
       </view>
       <view class="currency-name-en">
-        CNY
+        {{item.currencyNameEN}}
       </view>
       <view class="currency-value">
         {{screenData}}
       </view>
       <view class="currency-name-cn">
-      人民币￥
-      </view>
-    </view>
-    <!--第02组-->
-    <view class="currency-group">
-      <view class="currency-cal">
-        
-      </view>
-      <view class="currency-name-en">
-        CNY
-      </view>
-      <view class="currency-value">
-        {{screenData}}
-      </view>
-      <view class="currency-name-cn">
-      人民币￥
-      </view>
-    </view>
-        <!--第03组-->
-    <view class="currency-group">
-      <view class="currency-cal">
-        123*434+122
-      </view>
-      <view class="currency-name-en">
-        CNY
-      </view>
-      <view class="currency-value">
-        {{screenData}}
-      </view>
-      <view class="currency-name-cn">
-      人民币￥
-      </view>
-    </view>
-    <!--第04组-->
-    <view class="currency-group">
-      <view class="currency-cal">
-        123*434+122
-      </view>
-      <view class="currency-name-en">
-        CNY
-      </view>
-      <view class="currency-value">
-        {{screenData}}
-      </view>
-      <view class="currency-name-cn">
-      人民币￥
+        {{item.currencyNameCN}}
       </view>
     </view>
 
