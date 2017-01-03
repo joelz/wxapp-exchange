@@ -1,0 +1,31 @@
+/**index.wxss**/
+image {
+  width:48px;
+  height:48px;
+}
+
+.currency {
+  display: flex;
+  flex-direction: column;
+  height: 15%;
+  width:100%;
+  border-bottom: 1px solid black;
+}
+
+
+button::after {
+  border: 0px solid rgba(0, 0, 0, 0.2); 
+}
+
+.calPads {
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-radius: 0px;
+}
+
+.calpad {
+  width:25%;
+  flex-shrink: 0;
+}
