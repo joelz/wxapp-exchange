@@ -1,31 +1,90 @@
 /**index.wxss**/
-image {
-  width:48px;
-  height:48px;
+.content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    font-family: "Microsoft YaHei";
+    overflow-x: hidden;
 }
 
-.currency {
-  display: flex;
-  flex-direction: column;
-  height: 15%;
-  width:100%;
-  border-bottom: 1px solid black;
+/**所选货币列表**/
+.layout-top{
+    width: 100%;
+    margin-bottom: 30rpx;
+}
+.currency-group {
+    width: 100%;
+    display: flex;
+    flex-wrap:wrap;
+    flex-direction: row;
+    justify-content: space-around;
+    flex: 1;
+    height: 4rem;
+    border-bottom: 1px solid #d9eef7;
+}
+.currency-cal{
+    /**左右各3%，作为padding**/
+    width: 94%;
+    text-align: right;
+    font-size:12px;
+    color: #ccc; 
+    
+}
+.currency-name-en{
+     /**左右各3%，作为padding**/
+    width:24%;
+    text-align: left;
+}
+.currency-value{
+     /**左右各3%，作为padding**/
+    width: 64%;
+    text-align: right;
+}
+.currency-name-cn {
+     /**左右各3%，作为padding**/
+    width: 94%;
+    text-align: right;
+    font-size:12px;
+    color: #ccc; 
 }
 
 
-button::after {
-  border: 0px solid rgba(0, 0, 0, 0.2); 
+/**输入区**/
+.layout-bottom{
+    width: 100%;
+}
+.btnGroup {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    width: 100%;
+    height: 4rem;
+    background-color: #fff;
+}
+.item {
+    width:25%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 1px;
+    margin-right: 1px;
+}
+.item:active {
+    background-color: #ff0000;
 }
 
-.calPads {
-  width:100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  border-radius: 0px;
+.orange {
+    color: #fef4e9;
+    background: #f78d1d;
+    font-weight: bold;
 }
-
-.calpad {
-  width:25%;
-  flex-shrink: 0;
+.blue {
+    color:#d9eef7;
+    background-color: #0095cd;
+}
+.iconBtn{
+    display: flex;
 }

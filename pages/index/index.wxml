@@ -1,46 +1,96 @@
+
 <!--index.wxml-->
-<view class="container">
-  
-  <view class="currency">
-   <view> <image src="http://www.sciencekids.co.nz/images/pictures/flags96/Taiwan.jpg">guoqi</image> CNY </view>
-    <view><input placeholder="100" auto-focus/> </view>
+
+<view class="content">
+  <view class="layout-top">
+
+    <!--第01组-->
+    <view class="currency-group">
+      <view class="currency-cal">
+        123*434+122
+      </view>
+      <view class="currency-name-en">
+        CNY
+      </view>
+      <view class="currency-value">
+        {{screenData}}
+      </view>
+      <view class="currency-name-cn">
+      人民币￥
+      </view>
     </view>
-  <view class="currency">
-   USD
+    <!--第02组-->
+    <view class="currency-group">
+      <view class="currency-cal">
+        
+      </view>
+      <view class="currency-name-en">
+        CNY
+      </view>
+      <view class="currency-value">
+        {{screenData}}
+      </view>
+      <view class="currency-name-cn">
+      人民币￥
+      </view>
+    </view>
+        <!--第03组-->
+    <view class="currency-group">
+      <view class="currency-cal">
+        123*434+122
+      </view>
+      <view class="currency-name-en">
+        CNY
+      </view>
+      <view class="currency-value">
+        {{screenData}}
+      </view>
+      <view class="currency-name-cn">
+      人民币￥
+      </view>
+    </view>
+    <!--第04组-->
+    <view class="currency-group">
+      <view class="currency-cal">
+        123*434+122
+      </view>
+      <view class="currency-name-en">
+        CNY
+      </view>
+      <view class="currency-value">
+        {{screenData}}
+      </view>
+      <view class="currency-name-cn">
+      人民币￥
+      </view>
+    </view>
+
   </view>
-    <view class="currency">
-   HKD
+
+  <view class="layout-bottom">
+    <view class="btnGroup">
+      <view class="item blue" bindtap="clickBtn" id="{{id9}}">9</view>
+      <view class="item blue" bindtap="clickBtn" id="{{id8}}">8</view>
+      <view class="item blue" bindtap="clickBtn" id="{{id7}}">7</view>
+      <view class="item orange" bindtap="clickBtn" id="{{idadd}}">＋</view>
+    </view>
+    <view class="btnGroup">
+      <view class="item blue" bindtap="clickBtn" id="{{id6}}">6</view>
+      <view class="item blue" bindtap="clickBtn" id="{{id5}}">5</view>
+      <view class="item blue" bindtap="clickBtn" id="{{id4}}">4</view>
+      <view class="item orange" bindtap="clickBtn" id="{{idj}}">－</view>
+    </view>
+    <view class="btnGroup">
+      <view class="item blue" bindtap="clickBtn" id="{{id3}}">3</view>
+      <view class="item blue" bindtap="clickBtn" id="{{id2}}">2</view>
+      <view class="item blue" bindtap="clickBtn" id="{{id1}}">1</view>
+      <view class="item orange" bindtap="clickBtn" id="{{idx}}">×</view>
+    </view>
+    <view class="btnGroup">
+      <view class="item blue" bindtap="clickBtn" id="{{idd}}">.</view>
+      <view class="item blue" bindtap="clickBtn" id="{{id0}}">0</view>
+      <view class="item orange" bindtap="clickBtn" id="{{idb}}">←</view>
+      <view class="item orange" bindtap="clickBtn" id="{{iddiv}}">÷</view>
+    </view>
   </view>
-    <view class="currency">
-   TWD
-  </view>
-
-
-<view class="calPads">
-
-  <button type="default" class="calpad" > 7 </button>
-  <button type="default"  class="calpad" > 8 </button>
-<button type="default" class="calpad"  > 9 </button>
-<button type="default" class="calpad"  > + </button>
-
-  <button type="default" class="calpad" > 4 </button>
-  <button type="default"  class="calpad" > 5 </button>
-<button type="default" class="calpad"  > 6 </button>
-<button type="default" class="calpad"  > - </button>
-
-  <button type="default" class="calpad" > 1 </button>
-  <button type="default"  class="calpad" > 2 </button>
-<button type="default" class="calpad"  > 3 </button>
-<button type="default" class="calpad"  > x </button>
-
-  <button type="default" class="calpad" > . </button>
-  <button type="default"  class="calpad" > 0 </button>
-<button type="default" class="calpad"  > back </button>
-<button type="default" class="calpad"  > / </button>
-
-
-
-
-</view>
-
 </view>
