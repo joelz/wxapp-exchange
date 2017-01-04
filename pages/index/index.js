@@ -34,10 +34,10 @@ var app = getApp()
 	        iconType: 'waiting_circle',
 	        iconColor: 'white',
 	        currencyList: [
-                { id: 1, currencyNameEN: "CNY", currencyCal: "12+23*11", currencyValue: 123.33, currencyNameCN: "人民币￥" },
-                { id: 2, currencyNameEN: "HKD", currencyCal: "12+23*11", currencyValue: 223.33, currencyNameCN: "港币$" },
-                { id: 3, currencyNameEN: "USD", currencyCal: "12+23*11", currencyValue: 323.33, currencyNameCN: "美元$" },
-                { id: 4, currencyNameEN: "NTD", currencyCal: "12+23*11", currencyValue: 423.33, currencyNameCN: "新台币$" },
+                { id: 1, currencyNameEN: "CNY", currencyCal: "", currencyValue: 123.33, currencyNameCN: "人民币￥" },
+                { id: 2, currencyNameEN: "HKD", currencyCal: "", currencyValue: 223.33, currencyNameCN: "港币$" },
+                { id: 3, currencyNameEN: "USD", currencyCal: "", currencyValue: 323.33, currencyNameCN: "美元$" },
+                { id: 4, currencyNameEN: "JPY", currencyCal: "", currencyValue: 423.33, currencyNameCN: "日圆$" },
 	        ],
 	        selectedCurrencyId: 3,
 	        arr: [],
@@ -47,10 +47,14 @@ var app = getApp()
 			// 页面初始化 options为页面跳转所带来的参数
 		},
 		onReady : function () {
-			// 页面渲染完成
+		    // 页面渲染完成
 		},
 		onShow : function () {
-			// 页面显示
+		    // 页面显示
+		    console.log(app.globalData.currencyList)
+
+		    //TODO 有可能页面显示时，货币列表还是空的，
+            //可能需要先显示一个遮罩层，待货币列表返回了再隐藏遮罩层
 		},
 		onHide : function () {
 			// 页面隐藏
@@ -73,9 +77,38 @@ var app = getApp()
 		},
 		updateCurrencyList: function (event) {
 		    console.log('updated!');
+
+		    var baseCur = "";
+		    var baseCurIndex = -1;
+		    for (var i = 0; i < 4; i++) {
+		        if (this.data.currencyList[i].id == this.data.selectedCurrencyId) {
+		            baseCur = this.data.currencyList[i].currencyNameEN;
+		            baseCurIndex = i;
+		            break;
+		        }
+		    }
+
+		    for (var i = 0; i < 4; i++) {
+		        if (i == baseCur) {
+		            var obj = {};
+		            obj["currencyList[" + i + "].currencyValue"] = parseFloat(this.data.screenData);
+		            this.setData(obj);
+		        } else {
+		            var rates = app.globalData.currencyList;
+		            var obj = {};
+
+		            var fromCur = baseCur;
+		            var toCur = this.data.currencyList[i].currencyNameEN;
+
+		            obj["currencyList[" + i + "].currencyValue"] = parseFloat(this.data.screenData) * rates[toCur] / rates[fromCur];
+
+		            this.setData(obj);
+		        }
+		    }
+
 		},
 		clickBtn: function (event) {
-		    this.updateCurrencyList();
+		    
 			var id = event.target.id;
 			if (id == this.data.idb) { //退格←
 				var data = this.data.screenData;
@@ -90,28 +123,9 @@ var app = getApp()
 					"screenData" : data
 				});
 				this.data.arr.pop();
-			} else if (id == this.data.idc) { //清屏C
-				this.setData({
-					"screenData" : "0"
-				});
-				this.data.arr.length = 0;
-			} else if (id == this.data.idt) { //正负号+/-
-				var data = this.data.screenData;
-				if (data == "0") {
-					return;
-				}
-				var firstWord = data.charAt(0);
-				if (data == "－") {
-					data = data.substr(1);
-					this.data.arr.shift();
-				} else {
-					data = "－" + data;
-					this.data.arr.unshift("－");
-				}
-				this.setData({
-					"screenData" : data
-				});
-			} else if (id == this.data.ide) { //等于＝
+
+				this.updateCurrencyList();
+			}  else if (id == this.data.ide) { //等于＝
 				var data = this.data.screenData;
 				if (data == "0") {
 					return;
@@ -158,6 +172,7 @@ var app = getApp()
 				}
 				//存储历史记录
 				this.data.logs.push(data + result);
+
 				wx.setStorageSync("calclogs", this.data.logs);
 
 				this.data.arr.length = 0;
@@ -194,11 +209,13 @@ var app = getApp()
 						"lastIsOperaSymbo" : false
 					});
 				}
+
+				this.updateCurrencyList();
 			}
 		},
-		history : function () {
+		logs : function () {
 			wx.navigateTo({
-				url : '../history/history'
+				url : '../logs/logs'
 			})
 		}
 	})

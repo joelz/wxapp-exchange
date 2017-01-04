@@ -7,7 +7,7 @@
     <!--第01组-->
     <view wx:for="{{currencyList}}" wx:key="id" wx:for-index="idx" wx:for-item="item"
       class="{{selectedCurrencyId == item.id ? 'currency-group-selected':'currency-group'}}"
-      data-cid="{{item.id}}" bindtap="currencyClick">
+      data-cid="{{item.id}}" bindtap="currencyClick" bindlongtap="logs">
       <view class="currency-cal">
         {{item.currencyCal}}
       </view>
@@ -15,7 +15,7 @@
         {{item.currencyNameEN}}
       </view>
       <view class="currency-value">
-        {{screenData}}
+        {{item.currencyValue}}
       </view>
       <view class="currency-name-cn">
         {{item.currencyNameCN}}
