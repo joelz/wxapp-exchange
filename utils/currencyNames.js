@@ -1,4 +1,4 @@
-﻿var names = {
+var names = {
     "HKD": "港元",
     "MOP": "澳門元",
     "CNY": "人民幣",

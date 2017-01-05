@@ -1,6 +1,7 @@
 //main.js
 
 var util = require('../../utils/util');
+var Parser = require('../../utils/parser').Parser;
 
 //获取应用实例
 var app = getApp()
@@ -8,7 +9,6 @@ var app = getApp()
 	    data: {
 	        idb: "back",
 	        idc: "clear",
-	        idt: "toggle",
 	        idadd: "＋",
 	        id9: "9",
 	        id8: "8",
@@ -35,8 +35,6 @@ var app = getApp()
 	            ".": "."
 	        },
 	        lastIsOperaSymbo: false,
-	        iconType: 'waiting_circle',
-	        iconColor: 'white',
 	        selectCurrencyList: [],
 	        highlightedId: 0,
 	        rates: {},
@@ -58,6 +56,10 @@ var app = getApp()
 		    
 		    this.setData({ "selectCurrencyList": selectCurrencyList });
 		    this.setData({ "highlightedId": highlightedId });
+
+		    var screenData = this.data.selectCurrencyList[this.findCurrencyIndex(this.data.highlightedId)].currencyValue;
+		    this.setData({ "screenData": screenData.toString() });
+		    this.setData({ "calResult": screenData });
 		},
 		onHide : function () {
 		    // 页面隐藏
@@ -84,7 +86,7 @@ var app = getApp()
 
 		    var newHighlight = this.data.selectCurrencyList[this.findCurrencyIndex(this.data.highlightedId)];
 		    this.setData({ "screenData": newHighlight.currencyValue.toString() });
-
+		    this.setData({ "calResult": newHighlight.currencyValue.toString() });
 		    console.log('currencyClick');
 		},
 		updateCurrencyList: function (event) {
@@ -97,13 +99,13 @@ var app = getApp()
 
 		    var reg = /＋|－|×|÷/;
 
-		    console.log(this.data.screenData);
-		    console.log(this.data.screenData.search(reg));
+		    //console.log(this.data.screenData);
+		    //console.log(this.data.screenData.search(reg));
 
 		    for (var i = 0; i < 4; i++) {
 		        if (i == baseCurIndex) {
 		            var obj = {};
-		            obj["selectCurrencyList[" + i + "].currencyValue"] = this.data.calResult;
+		            obj["selectCurrencyList[" + i + "].currencyValue"] = this.data.screenData.search(reg) > -1 ? this.data.calResult : this.data.screenData;
 		            obj["selectCurrencyList[" + i + "].currencyCal"] = this.data.screenData.search(reg) > -1 ? this.data.screenData : "";
 		            this.setData(obj);
 		        } else {
@@ -131,30 +133,44 @@ var app = getApp()
 
 				data = data.substring(0, data.length - 1);
 				if (data == "" || data == "－") {
-					data = 0;
+					data = "0";
 				}
 
 				this.setData({
-					"screenData" : data
-				});
-
-				this.setData({
+					"screenData" : data,
 				    "calResult": this.cal(data)
 				});
+				
 
 			}  else {
 				if (this.data.operaSymbo[id]) { //如果是符号+-*/
-					if (this.data.lastIsOperaSymbo || this.data.screenData == "0") {
-						return;
-					}
+				    if (this.data.lastIsOperaSymbo) {
+				        return;
+				    }
+
+				    if (id == this.data.idd && !this.canAppendDot(this.data.screenData)) {
+				        return;
+				    }
+				}
+
+				if (!this.data.operaSymbo[id] && this.isMaxDecLength()) {
+				    wx.showModal({
+				        title: '提示',
+				        showCancel: false,
+				        content: '最多只能输入4位小数。'
+				    });
+
+				    return;
 				}
 
 				var sd = this.data.screenData;
 				var data;
-				if (sd == 0) {
-					data = id;
+				if (sd == "0"&&id == this.data.idd) {
+				    data = sd + id;
+				} else if (sd == "0") {
+				    data = id;
 				} else {
-					data = sd + id;
+				    data = sd + id;
 				}
 				this.setData({
 					"screenData" : data
@@ -165,69 +181,39 @@ var app = getApp()
 						"lastIsOperaSymbo" : true
 					});
 				} else {
-					this.setData({
-						"lastIsOperaSymbo" : false
-					});
-
-					this.setData({
-					    "calResult": this.cal(data)
-					});
+				    this.setData({
+				        "lastIsOperaSymbo": false,
+				        "calResult": this.cal(data)
+				    });
 				}
 			}
 
 			this.updateCurrencyList();
 		},
 		cal: function (screenData) {
-
-		    //eval是js中window的一个方法，而微信页面的脚本逻辑在是在JsCore中运行，
-		    //JsCore是一个没有窗口对象的环境，所以不能再脚本中使用window
-		    //var result = eval(newData);
-
+		    screenData = screenData.toString();
 		    var lastWord = screenData.charAt(screenData.length);
 		    if (isNaN(lastWord)) {
                 //TODO ?
 		        return;
 		    }
 
-		    var num = "";
+            //先移除尾部的符号
+		    var regSymbolEnd = /(＋|－|×|÷|\.)$/
+		    var data = screenData.replace(regSymbolEnd, "");
 
-		    var lastOperator = "";
-		    var arr = screenData.split('');
-		    var optarr = [];
+            //再替换中文符号为英文符号
+		    data = data.replace(/＋/g, "+");
+		    data = data.replace(/－/g, "-");
+		    data = data.replace(/×/g, "*");
+		    data = data.replace(/÷/g, "/");
 
-		    for (var i in arr) {
-		        if (isNaN(arr[i]) == false || arr[i] == this.data.idd || arr[i] == this.data.idt) {
-		            num += arr[i];
-		        } else {
-		            lastOperator = arr[i];
-		            optarr.push(num);
-		            optarr.push(arr[i]);
-		            num = "";
-		        }
-		    }
-		    optarr.push(Number(num));
+            //最后计算
+		    var result = Parser.evaluate(data, { x: 7 });
 
-		    var result = Number(optarr[0]) * 1.0;
-		    console.log(result);
+		    console.log("cal:" + result);
 
-		    for (var i = 1; i < optarr.length; i++) {
-		        if (isNaN(optarr[i])) {
-		            if (optarr[1] == this.data.idadd) {
-		                result += Number(optarr[i + 1]);
-		            } else if (optarr[1] == this.data.idj) {
-		                result -= Number(optarr[i + 1]);
-		            } else if (optarr[1] == this.data.idx) {
-		                result *= Number(optarr[i + 1]);
-		            } else if (optarr[1] == this.data.iddiv) {
-		                result /= Number(optarr[i + 1]);
-		            }
-		        }
-		    }
-
-		    console.log(result);
-
-		    //return util.formatCalResult(0,result);
-		    return result;
+		    return util.formatCalResult(null, result);
 		},
 		findCurrencyIndex: function (id) {
 		    var index = -1;
@@ -239,6 +225,26 @@ var app = getApp()
 		    }
 
 		    return index;
+		},
+		canAppendDot: function (screenData) {
+		    var regSymbol = /＋|－|×|÷/;
+		    var arr = screenData.split(regSymbol);
+
+		    if (arr[arr.length - 1].indexOf(".") > -1) {
+		        return false;
+		    }
+
+		    return true;
+		},
+		isMaxDecLength: function () {
+		    var regSymbol = /＋|－|×|÷/;
+		    var arr = this.data.screenData.split(regSymbol);
+
+		    if (arr[arr.length - 1].indexOf(".") > -1) {
+		        return arr[arr.length - 1].split('.')[1].length > 3;
+		    }
+
+		    return false;
 		},
 		selectCurrency: function (ev) {
             //longtap处理事件

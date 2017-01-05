@@ -17,6 +17,21 @@ function formatNumber(n) {
 }
 
 function formatCalResult(input, result) {
+
+    //格式化单个值
+    if (input == null) {
+        if (result.toString().search(/\./) > -1) {
+            var arr = result.toString().split(".");
+            var n = arr[1].length;
+            if (n > 4)
+                n = 4;
+            return parseFloat(result.toFixed(n));
+        }
+
+        return result;
+    }
+
+    //根据input的小数位数，格式化result
     input = input.toString();
     var n = 0;
     if (input.split(".")[1]) {

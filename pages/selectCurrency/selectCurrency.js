@@ -1,4 +1,7 @@
 //selectCurrency.js
+
+var util = require('../../utils/util');
+
 //获取应用实例
 var app = getApp()
 	Page({
@@ -87,14 +90,14 @@ var app = getApp()
 		            var toCur = this.data.selectCurrencyList[i].currencyNameEN;
 
 		            var obj = {};
-		            obj["selectCurrencyList[" + i + "].currencyValue"] = fromValue * rates[toCur] / rates[fromCur];
-		            
+		            var toValue = fromValue * rates[toCur] / rates[fromCur];
+		            obj["selectCurrencyList[" + i + "].currencyValue"] = util.formatCalResult(fromValue, toValue);
+			            
 		            this.setData(obj);
 		        }
 		    }
 		    
 		    wx.navigateBack();
-
 		},
 
 		findCurrencyIndex: function (id) {
