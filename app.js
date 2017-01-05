@@ -5,8 +5,6 @@ App({
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
-
-    this.updatedExchange();
   },
   getUserInfo:function(cb){
     var that = this
@@ -25,66 +23,6 @@ App({
         }
       })
     }
-  },
-  updatedExchange: function () {
-      var that = this;
-      wx.request({
-          url: that.globalData.fixerApi,
-          data: {},
-          method: 'GET',
-          success: function (res) {
-              //如何解析yahoo api传回来的xml？？
-              // success
-              if (res.statusCode == 200) {
-
-                  //补充一个USD做基准利率
-                  res.data.rates.USD = 1.0000;
-
-                  that.globalData.currencyList = res.data.rates;
-                  that.globalData.exchangeLastUpdated = res.data.date;
-              }
-              console.log(res);
-
-              
-          },
-          fail: function () {
-              // fail
-          },
-          complete: function () {
-              // complete
-          }
-      })
-  },
-  xmlToJson: function(xml) {
-      var obj = {};
-      if (xml.nodeType == 1) {                
-          if (xml.attributes.length > 0) {
-              obj["@attributes"] = {};
-              for (var j = 0; j < xml.attributes.length; j++) {
-                  var attribute = xml.attributes.item(j);
-                  obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-              }
-          }
-      } else if (xml.nodeType == 3) { 
-          obj = xml.nodeValue;
-      }            
-      if (xml.hasChildNodes()) {
-          for (var i = 0; i < xml.childNodes.length; i++) {
-              var item = xml.childNodes.item(i);
-              var nodeName = item.nodeName;
-              if (typeof (obj[nodeName]) == "undefined") {
-                  obj[nodeName] = xmlToJson(item);
-              } else {
-                  if (typeof (obj[nodeName].push) == "undefined") {
-                      var old = obj[nodeName];
-                      obj[nodeName] = [];
-                      obj[nodeName].push(old);
-                  }
-                  obj[nodeName].push(xmlToJson(item));
-              }
-          }
-      }
-      return obj;
   },
   globalData:{
       userInfo: null,

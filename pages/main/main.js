@@ -3,101 +3,59 @@
 var app = getApp()
 	Page({
 	    data: {
-	        progressTip: ''
+	        idb: "back",
+	        idc: "clear",
+	        idt: "toggle",
+	        idadd: "＋",
+	        id9: "9",
+	        id8: "8",
+	        id7: "7",
+	        idj: "－",
+	        id6: "6",
+	        id5: "5",
+	        id4: "4",
+	        idx: "×",
+	        id3: "3",
+	        id2: "2",
+	        id1: "1",
+	        iddiv: "÷",
+	        id0: "0",
+	        idd: ".",
+	        ide: "＝",
+	        screenData: "0",
+            calResult: 0.0,
+	        operaSymbo: {
+	            "＋": "+",
+	            "－": "-",
+	            "×": "*",
+	            "÷": "/",
+	            ".": "."
+	        },
+	        lastIsOperaSymbo: false,
+	        iconType: 'waiting_circle',
+	        iconColor: 'white',
+	        currencyList: [
+                { id: 1, currencyNameEN: "CNY", currencyCal: "", currencyValue: 123.33, currencyNameCN: "人民币￥" },
+                { id: 2, currencyNameEN: "HKD", currencyCal: "", currencyValue: 223.33, currencyNameCN: "港币$" },
+                { id: 3, currencyNameEN: "USD", currencyCal: "", currencyValue: 323.33, currencyNameCN: "美元$" },
+                { id: 4, currencyNameEN: "JPY", currencyCal: "", currencyValue: 423.33, currencyNameCN: "日圆$" },
+	        ],
+	        highlightedId: 3,
+	        arr: [],
+	        logs: []
 	    },
 		onLoad : function (options) {
-		    // 页面初始化 options为页面跳转所带来的参数
+			// 页面初始化 options为页面跳转所带来的参数
 		},
 		onReady : function () {
 		    // 页面渲染完成
 		},
 		onShow : function () {
 		    // 页面显示
+		    console.log(app.globalData.currencyList)
 
-
-		    this.setData({
-		        "progressTip": "正在刷新汇率列表..."
-		    });
-
-            //1.加载汇率列表
-		    var that = this;
-		    wx.request({
-		        url: app.globalData.fixerApi,
-		        data: {},
-		        method: 'GET',
-		        success: function (res) {
-		            //如何解析yahoo api传回来的xml？？
-		            // success
-		            if (res.statusCode == 200) {
-
-		                //补充一个USD做基准利率
-		                res.data.rates.USD = 1.0000;
-
-		                wx.setStorageSync('cRates', res.data.rates);
-
-		                //2.加载货币名称列表
-		                //TODO：可能要从其他api获取，這里暂时用cRates替代
-		                that.setData({
-		                    "progressTip": "正在刷新货币名称..."
-		                });
-		                var cNames={};
-		                for (var n in res.data.rates) {
-		                    cNames[n] = n;
-		                }
-		                wx.setStorageSync('cNames', cNames);
-
-		                //3.读取用户本地存储的已选货币列表
-		                //如果没有，就默认填入四个
-		                that.setData({
-		                    "progressTip": "检查已选货币..."
-		                });
-		                var selectCurrencyList = wx.getStorageSync('selectCurrencyList') || []
-		                if (selectCurrencyList.length == 0) {
-		                    selectCurrencyList = [
-                                { id: 1, currencyNameEN: "CNY", currencyCal: "", currencyValue: 0, currencyNameCN: "人民币￥" },
-                                { id: 2, currencyNameEN: "HKD", currencyCal: "", currencyValue: 0, currencyNameCN: "港币$" },
-                                { id: 3, currencyNameEN: "USD", currencyCal: "", currencyValue: 0, currencyNameCN: "美元$" },
-                                { id: 4, currencyNameEN: "JPY", currencyCal: "", currencyValue: 0, currencyNameCN: "日圆$" },
-		                    ];
-
-		                    wx.setStorageSync('selectCurrencyList', selectCurrencyList);
-		                }
-		                
-
-		                //4.读取用户本地存储的默认选中货币Id
-		                //如果没有，默认为2
-		                var highlightedId = wx.getStorageSync('highlightedId') || 0;
-		                if (highlightedId == 0) {
-		                    highlightedId = 2;
-
-		                    wx.setStorageSync('highlightedId', highlightedId);
-		                }
-
-
-		                //5.所有准备工作完成，redirect到main
-		                that.setData({
-		                    "progressTip": "正在载入首页..."
-		                });
-		                wx.redirectTo({
-		                    url: '../main/main'
-		                })
-
-		            }
-		            console.log(res);
-		        },
-		        fail: function () {
-		            // fail
-		        },
-		        complete: function () {
-		            // complete
-		        }
-		    })
-		   
-
-
-
-
-
+		    //TODO 有可能页面显示时，货币列表还是空的，
+            //可能需要先显示一个遮罩层，待货币列表返回了再隐藏遮罩层
 		},
 		onHide : function () {
 			// 页面隐藏
