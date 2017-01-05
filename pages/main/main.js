@@ -34,34 +34,35 @@ var app = getApp()
 	        lastIsOperaSymbo: false,
 	        iconType: 'waiting_circle',
 	        iconColor: 'white',
-	        currencyList: [
-                { id: 1, currencyNameEN: "CNY", currencyCal: "", currencyValue: 123.33, currencyNameCN: "人民币￥" },
-                { id: 2, currencyNameEN: "HKD", currencyCal: "", currencyValue: 223.33, currencyNameCN: "港币$" },
-                { id: 3, currencyNameEN: "USD", currencyCal: "", currencyValue: 323.33, currencyNameCN: "美元$" },
-                { id: 4, currencyNameEN: "JPY", currencyCal: "", currencyValue: 423.33, currencyNameCN: "日圆$" },
-	        ],
-	        highlightedId: 3,
+	        currencyList: [],
+	        highlightedId: 0,
+	        rates: {},
 	        arr: [],
 	        logs: []
 	    },
 		onLoad : function (options) {
-			// 页面初始化 options为页面跳转所带来的参数
+		    // 页面初始化 options为页面跳转所带来的参数
+		    var rates = wx.getStorageSync('cRates');
+		    this.setData({ "rates": rates });
 		},
 		onReady : function () {
 		    // 页面渲染完成
 		},
 		onShow : function () {
 		    // 页面显示
-		    console.log(app.globalData.currencyList)
-
-		    //TODO 有可能页面显示时，货币列表还是空的，
-            //可能需要先显示一个遮罩层，待货币列表返回了再隐藏遮罩层
+		    var currencyList = wx.getStorageSync('selectCurrencyList');
+		    var highlightedId = wx.getStorageSync('highlightedId') ;
+		    
+		    this.setData({ "currencyList": currencyList });
+		    this.setData({ "highlightedId": highlightedId });
 		},
 		onHide : function () {
 			// 页面隐藏
 		},
 		onUnload : function () {
-			// 页面关闭
+		    // 页面关闭
+		    wx.setStorageSync('selectCurrencyList', this.data.currencyList);
+		    wx.setStorageSync('highlightedId', this.data.highlightedId);
 		},
 		currencyClick: function (event) {
 		    
@@ -85,6 +86,7 @@ var app = getApp()
 
 		    var baseCurIndex = this.findCurrencyIndex(this.data.highlightedId);
 		    var fromCur = this.data.currencyList[baseCurIndex].currencyNameEN;
+		    var rates = this.data.rates;
 
 		    var reg = /\+|－|×|÷/;
 
@@ -98,7 +100,7 @@ var app = getApp()
 		            obj["currencyList[" + i + "].currencyCal"] = this.data.screenData.search(reg) > -1 ? this.data.screenData : "";
 		            this.setData(obj);
 		        } else {
-		            var rates = app.globalData.currencyList;
+		            
 		            var toCur = this.data.currencyList[i].currencyNameEN;
 
 		            var obj = {};
