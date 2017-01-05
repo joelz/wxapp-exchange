@@ -1,13 +1,13 @@
 
-<!--index.wxml-->
+<!--main.wxml-->
 
 <view class="content">
   <view class="layout-top">
 
     <!--第01组-->
-    <view wx:for="{{currencyList}}" wx:key="id" wx:for-index="idx" wx:for-item="item"
+    <view wx:for="{{selectCurrencyList}}" wx:key="id" wx:for-index="idx" wx:for-item="item"
       class="{{highlightedId == item.id ? 'currency-group-selected':'currency-group'}}"
-      data-cid="{{item.id}}" bindtap="currencyClick" bindlongtap="logs">
+      data-cid="{{item.id}}" bindtap="currencyClick" bindlongtap="selectCurrency">
       <view class="currency-cal">
         {{item.currencyCal}}
       </view>

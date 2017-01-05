@@ -2,11 +2,10 @@
 <!--index.wxml-->
 
 <view class="content">
-  <view >
-
-    <text>汇率计算</text>
-
+  <view class="view-group">
+    <text>汇率计算器</text>
+  </view>
+  <view class="view-progressTip">
     <text>{{progressTip}}</text>
   </view>
-
 </view>

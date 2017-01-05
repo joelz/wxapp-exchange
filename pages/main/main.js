@@ -1,4 +1,4 @@
-//index.js
+//main.js
 //获取应用实例
 var app = getApp()
 	Page({
@@ -34,14 +34,14 @@ var app = getApp()
 	        lastIsOperaSymbo: false,
 	        iconType: 'waiting_circle',
 	        iconColor: 'white',
-	        currencyList: [],
+	        selectCurrencyList: [],
 	        highlightedId: 0,
 	        rates: {},
 	        arr: [],
 	        logs: []
 	    },
 		onLoad : function (options) {
-		    // 页面初始化 options为页面跳转所带来的参数
+
 		    var rates = wx.getStorageSync('cRates');
 		    this.setData({ "rates": rates });
 		},
@@ -50,18 +50,20 @@ var app = getApp()
 		},
 		onShow : function () {
 		    // 页面显示
-		    var currencyList = wx.getStorageSync('selectCurrencyList');
+		    var selectCurrencyList = wx.getStorageSync('selectCurrencyList');
 		    var highlightedId = wx.getStorageSync('highlightedId') ;
 		    
-		    this.setData({ "currencyList": currencyList });
+		    this.setData({ "selectCurrencyList": selectCurrencyList });
 		    this.setData({ "highlightedId": highlightedId });
 		},
 		onHide : function () {
-			// 页面隐藏
+		    // 页面隐藏
+		    console.log('onHide');
+		    wx.setStorageSync('selectCurrencyList', this.data.selectCurrencyList);
 		},
 		onUnload : function () {
 		    // 页面关闭
-		    wx.setStorageSync('selectCurrencyList', this.data.currencyList);
+		    console.log('onUnload');
 		    wx.setStorageSync('highlightedId', this.data.highlightedId);
 		},
 		currencyClick: function (event) {
@@ -74,18 +76,20 @@ var app = getApp()
 		    }
 
 		    //切换当前选中的货币，同时做一些清理工作
-		    this.data.currencyList[this.findCurrencyIndex(this.data.highlightedId)].currencyCal = "";
+		    this.data.selectCurrencyList[this.findCurrencyIndex(this.data.highlightedId)].currencyCal = "";
 		    this.setData({ "highlightedId": id });
 
-		    var newHighlight = this.data.currencyList[this.findCurrencyIndex(this.data.highlightedId)];
+		    var newHighlight = this.data.selectCurrencyList[this.findCurrencyIndex(this.data.highlightedId)];
 		    this.setData({ "screenData": newHighlight.currencyValue.toString() });
+
+		    console.log('currencyClick');
 		},
 		updateCurrencyList: function (event) {
 
 		    console.log('updated!');
 
 		    var baseCurIndex = this.findCurrencyIndex(this.data.highlightedId);
-		    var fromCur = this.data.currencyList[baseCurIndex].currencyNameEN;
+		    var fromCur = this.data.selectCurrencyList[baseCurIndex].currencyNameEN;
 		    var rates = this.data.rates;
 
 		    var reg = /\+|－|×|÷/;
@@ -96,16 +100,16 @@ var app = getApp()
 		    for (var i = 0; i < 4; i++) {
 		        if (i == baseCurIndex) {
 		            var obj = {};
-		            obj["currencyList[" + i + "].currencyValue"] = this.data.calResult;
-		            obj["currencyList[" + i + "].currencyCal"] = this.data.screenData.search(reg) > -1 ? this.data.screenData : "";
+		            obj["selectCurrencyList[" + i + "].currencyValue"] = this.data.calResult;
+		            obj["selectCurrencyList[" + i + "].currencyCal"] = this.data.screenData.search(reg) > -1 ? this.data.screenData : "";
 		            this.setData(obj);
 		        } else {
 		            
-		            var toCur = this.data.currencyList[i].currencyNameEN;
+		            var toCur = this.data.selectCurrencyList[i].currencyNameEN;
 
 		            var obj = {};
-		            obj["currencyList[" + i + "].currencyValue"] = this.data.calResult * rates[toCur] / rates[fromCur];
-		            obj["currencyList[" + i + "].currencyCal"] = "";
+		            obj["selectCurrencyList[" + i + "].currencyValue"] = this.data.calResult * rates[toCur] / rates[fromCur];
+		            obj["selectCurrencyList[" + i + "].currencyCal"] = "";
 
 		            this.setData(obj);
 		        }
@@ -224,16 +228,17 @@ var app = getApp()
 		    var index = -1;
 
 		    for (var i = 0; i < 4; i++) {
-		        if (this.data.currencyList[i].id == id) {
+		        if (this.data.selectCurrencyList[i].id == id) {
 		            return i;
 		        }
 		    }
 
 		    return index;
 		},
-		logs : function () {
-			wx.navigateTo({
-				url : '../logs/logs'
-			})
+		selectCurrency: function () {
+		    console.log('selectCurrency');
+		    wx.navigateTo({
+		        url: '../selectCurrency/selectCurrency?id=' + this.data.highlightedId
+		    });
 		}
 	})
