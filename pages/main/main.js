@@ -1,4 +1,7 @@
 //main.js
+
+var util = require('../../utils/util');
+
 //获取应用实例
 var app = getApp()
 	Page({
@@ -92,7 +95,7 @@ var app = getApp()
 		    var fromCur = this.data.selectCurrencyList[baseCurIndex].currencyNameEN;
 		    var rates = this.data.rates;
 
-		    var reg = /\+|－|×|÷/;
+		    var reg = /＋|－|×|÷/;
 
 		    console.log(this.data.screenData);
 		    console.log(this.data.screenData.search(reg));
@@ -108,7 +111,8 @@ var app = getApp()
 		            var toCur = this.data.selectCurrencyList[i].currencyNameEN;
 
 		            var obj = {};
-		            obj["selectCurrencyList[" + i + "].currencyValue"] = this.data.calResult * rates[toCur] / rates[fromCur];
+		            var toValue = this.data.calResult * rates[toCur] / rates[fromCur];
+		            obj["selectCurrencyList[" + i + "].currencyValue"] = util.formatCalResult(this.data.calResult, toValue);
 		            obj["selectCurrencyList[" + i + "].currencyCal"] = "";
 
 		            this.setData(obj);
@@ -222,6 +226,7 @@ var app = getApp()
 
 		    console.log(result);
 
+		    //return util.formatCalResult(0,result);
 		    return result;
 		},
 		findCurrencyIndex: function (id) {
@@ -235,10 +240,11 @@ var app = getApp()
 
 		    return index;
 		},
-		selectCurrency: function () {
+		selectCurrency: function (ev) {
+            //longtap处理事件
 		    console.log('selectCurrency');
 		    wx.navigateTo({
-		        url: '../selectCurrency/selectCurrency?id=' + this.data.highlightedId
+		        url: '../selectCurrency/selectCurrency?id=' + ev.currentTarget.dataset.cid
 		    });
 		}
 	})

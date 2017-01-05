@@ -16,6 +16,20 @@ function formatNumber(n) {
   return n[1] ? n : '0' + n
 }
 
+function formatCalResult(input, result) {
+    input = input.toString();
+    var n = 0;
+    if (input.split(".")[1]) {
+        n = input.split(".")[1].length;
+    }
+
+    if (n == 0)
+        n = 2;
+
+    return parseFloat(result.toFixed(n));
+}
+
 module.exports = {
-  formatTime: formatTime
+    formatTime: formatTime,
+    formatCalResult: formatCalResult
 }
