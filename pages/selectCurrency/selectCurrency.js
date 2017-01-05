@@ -74,7 +74,7 @@ var app = getApp()
 		    }
 
             //修改高亮货币的中文名、英文名
-		    var baseCurIndex = this.findCurrencyIndex(this.data.highlightedId);
+		    var baseCurIndex = this.data.highlightedId;
 		    var obj = {};
 		    obj["selectCurrencyList[" + baseCurIndex + "].currencyNameEN"] = ds.cid;
 		    obj["selectCurrencyList[" + baseCurIndex + "].currencyNameCN"] = this.data.cNames[ds.cid];
@@ -100,17 +100,6 @@ var app = getApp()
 		    wx.navigateBack();
 		},
 
-		findCurrencyIndex: function (id) {
-		    var index = -1;
-
-		    for (var i = 0; i < 4; i++) {
-		        if (this.data.selectCurrencyList[i].id == id) {
-		            return i;
-		        }
-		    }
-
-		    return index;
-		},
 		isCurrencySelected: function (nameEN) {
 
 		    for (var i = 0; i < 4; i++) {

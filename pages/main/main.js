@@ -57,13 +57,15 @@ var app = getApp()
 		    this.setData({ "selectCurrencyList": selectCurrencyList });
 		    this.setData({ "highlightedId": highlightedId });
 
-		    var screenData = this.data.selectCurrencyList[this.findCurrencyIndex(this.data.highlightedId)].currencyValue;
+		    var screenData = this.data.selectCurrencyList[this.data.highlightedId].currencyValue;
 		    this.setData({ "screenData": screenData.toString() });
 		    this.setData({ "calResult": screenData });
 		},
 		onHide : function () {
 		    // 页面隐藏
 		    console.log('onHide');
+
+            //存起来，给selectCurrency页面使用
 		    wx.setStorageSync('selectCurrencyList', this.data.selectCurrencyList);
 		},
 		onUnload : function () {
@@ -81,26 +83,24 @@ var app = getApp()
 		    }
 
 		    //切换当前选中的货币，同时做一些清理工作
-		    this.data.selectCurrencyList[this.findCurrencyIndex(this.data.highlightedId)].currencyCal = "";
+		    this.data.selectCurrencyList[this.data.highlightedId].currencyCal = "";
 		    this.setData({ "highlightedId": id });
 
-		    var newHighlight = this.data.selectCurrencyList[this.findCurrencyIndex(this.data.highlightedId)];
+		    var newHighlight = this.data.selectCurrencyList[this.data.highlightedId];
 		    this.setData({ "screenData": newHighlight.currencyValue.toString() });
 		    this.setData({ "calResult": newHighlight.currencyValue.toString() });
-		    console.log('currencyClick');
+
+		    //console.log('currencyClick');
 		},
 		updateCurrencyList: function (event) {
 
-		    console.log('updated!');
+		    //console.log('updated!');
 
-		    var baseCurIndex = this.findCurrencyIndex(this.data.highlightedId);
+		    var baseCurIndex = this.data.highlightedId;
 		    var fromCur = this.data.selectCurrencyList[baseCurIndex].currencyNameEN;
 		    var rates = this.data.rates;
 
 		    var reg = /＋|－|×|÷/;
-
-		    //console.log(this.data.screenData);
-		    //console.log(this.data.screenData.search(reg));
 
 		    for (var i = 0; i < 4; i++) {
 		        if (i == baseCurIndex) {
@@ -141,9 +141,8 @@ var app = getApp()
 				    "calResult": this.cal(data)
 				});
 				
-
 			}  else {
-				if (this.data.operaSymbo[id]) { //如果是符号+-*/
+				if (this.data.operaSymbo[id]) { //如果是符号+-x*./
 				    if (this.data.lastIsOperaSymbo) {
 				        return;
 				    }
@@ -172,16 +171,15 @@ var app = getApp()
 				} else {
 				    data = sd + id;
 				}
-				this.setData({
-					"screenData" : data
-				});
 
 				if (this.data.operaSymbo[id]) {
-					this.setData({
+				    this.setData({
+				        "screenData" : data,
 						"lastIsOperaSymbo" : true
 					});
 				} else {
 				    this.setData({
+				        "screenData" : data,
 				        "lastIsOperaSymbo": false,
 				        "calResult": this.cal(data)
 				    });
@@ -190,12 +188,27 @@ var app = getApp()
 
 			this.updateCurrencyList();
 		},
+		clear: function (event) {
+
+		    var id = event.target.id;
+		    var data = this.data.screenData;
+
+		    if (id == this.data.idb && data != "0") { //退格←
+		        data = "0";
+
+		        this.setData({
+		            "screenData": data,
+		            "calResult": this.cal(data)
+		        });
+
+		        this.updateCurrencyList();
+		    }
+		},
 		cal: function (screenData) {
 		    screenData = screenData.toString();
-		    var lastWord = screenData.charAt(screenData.length);
-		    if (isNaN(lastWord)) {
-                //TODO ?
-		        return;
+
+		    if (screenData == "0") {
+		        return 0;
 		    }
 
             //先移除尾部的符号
@@ -214,17 +227,6 @@ var app = getApp()
 		    console.log("cal:" + result);
 
 		    return util.formatCalResult(null, result);
-		},
-		findCurrencyIndex: function (id) {
-		    var index = -1;
-
-		    for (var i = 0; i < 4; i++) {
-		        if (this.data.selectCurrencyList[i].id == id) {
-		            return i;
-		        }
-		    }
-
-		    return index;
 		},
 		canAppendDot: function (screenData) {
 		    var regSymbol = /＋|－|×|÷/;

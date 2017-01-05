@@ -53,10 +53,10 @@ var app = getApp()
 		                var selectCurrencyList = wx.getStorageSync('selectCurrencyList') || []
 		                if (selectCurrencyList.length == 0) {
 		                    selectCurrencyList = [
-                                { id: 1, currencyNameEN: "CNY", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["CNY"] },
-                                { id: 2, currencyNameEN: "HKD", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["HKD"] },
-                                { id: 3, currencyNameEN: "USD", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["USD"] },
-                                { id: 4, currencyNameEN: "JPY", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["JPY"] },
+                                { id: 0, currencyNameEN: "CNY", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["CNY"] },
+                                { id: 1, currencyNameEN: "HKD", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["HKD"] },
+                                { id: 2, currencyNameEN: "USD", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["USD"] },
+                                { id: 3, currencyNameEN: "JPY", currencyCal: "", currencyValue: 0, currencyNameCN: cName.names["JPY"] },
 		                    ];
 
 		                    wx.setStorageSync('selectCurrencyList', selectCurrencyList);

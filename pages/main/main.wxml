@@ -46,7 +46,7 @@
     <view class="btnGroup">
       <view class="item blue" bindtap="clickBtn" id="{{idd}}">.</view>
       <view class="item blue" bindtap="clickBtn" id="{{id0}}">0</view>
-      <view class="item orange" bindtap="clickBtn" id="{{idb}}">←</view>
+      <view class="item orange" bindtap="clickBtn" bindlongtap="clear" id="{{idb}}">←</view>
       <view class="item orange" bindtap="clickBtn" id="{{iddiv}}">÷</view>
     </view>
   </view>
