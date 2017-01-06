@@ -1,0 +1,14 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/main/main",
+    "pages/selectCurrency/selectCurrency",
+    "pages/logs/logs"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#da7c0c",
+    "navigationBarTitleText": "汇率计算器",
+    "navigationBarTextStyle":"white"
+  }
+}
