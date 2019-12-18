@@ -33,9 +33,6 @@ var app = getApp()
 		            // success
 		            if (res.statusCode == 200) {
 
-		                //补充一个USD做基准利率
-		                res.data.rates.USD = 1.0000;
-
 		                wx.setStorageSync('cRates', res.data.rates);
 
 		                //2.加载货币名称列表
